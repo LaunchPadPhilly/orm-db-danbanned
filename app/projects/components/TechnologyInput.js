@@ -1,42 +1,88 @@
-// TODO: Students will implement this component
-// This is an advanced component building exercise
+"use client";
+import { useState } from "react";
 
-// Component Requirements:
-// 1. Create a component that accepts { technologies, onChange, error } props
-// 2. Allow users to type in a technology name and add it to the list
-// 3. Provide quick-add buttons for common technologies
-// 4. Display selected technologies as removable tags
-// 5. Prevent duplicate technologies
-// 6. Support both keyboard (Enter) and button (Add) interactions
-// 7. Handle error states with visual feedback
+export default function TechnologyInput({ technologies, onChange }) {
+  const [input, setInput] = useState("");
 
-// Learning Objectives:
-// - Advanced React state management
-// - Array manipulation patterns
-// - User input handling
-// - Conditional styling
-// - Accessibility considerations
-// - Component prop patterns
+  const predefined = ["JavaScript", "React", "Next.js"];
 
-// Suggested Technologies for Quick-Add:
-// ['JavaScript', 'TypeScript', 'React', 'Next.js', 'Node.js', 'Express',
-//  'HTML', 'CSS', 'Tailwind CSS', 'Bootstrap', 'Python', 'Java',
-//  'PostgreSQL', 'MongoDB', 'MySQL', 'Prisma', 'GraphQL', 'REST API',
-//  'Git', 'Docker', 'AWS', 'Vercel', 'Figma', 'Photoshop']
+  const addTechnology = (tech) => {
+    const trimmed = tech.trim();
+    if (!trimmed) return;
+    if (technologies.includes(trimmed)) return;
 
-// Implementation Hints:
-// - Use 'use client' directive
-// - Manage local input state with useState
-// - Use filter() to remove technologies
-// - Use includes() to check for duplicates
-// - Handle keyPress event for Enter key
-// - Style error states with conditional classes
+    onChange([...technologies, trimmed]);
+    setInput("");
+  };
 
-export default function TechnologyInput({ technologies = [], onChange, error }) {
-  // TODO: Implement this component
+  const removeTechnology = (tech) => {
+    onChange(technologies.filter((t) => t !== tech));
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addTechnology(input);
+    }
+  };
+
   return (
     <div>
-      <p>TODO: Implement TechnologyInput component</p>
+
+      {/* Input + Add Button */}
+      <div className="flex gap-2 mb-2">
+        <input
+          placeholder="Type a technology"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyPress={handleKeyPress}
+          className="border p-2 rounded w-full"
+        />
+
+        <button
+          type="button"
+          onClick={() => addTechnology(input)}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Add
+        </button>
+      </div>
+
+      {/* Predefined Technology Buttons */}
+      <div className="flex gap-2 mb-2 flex-wrap">
+        {predefined.map((tech) => (
+          <button
+            key={tech}
+            type="button"
+            disabled={technologies.includes(tech)}
+            className="border px-3 py-1 rounded disabled:opacity-50"
+            onClick={() => addTechnology(tech)}
+          >
+            {tech}
+          </button>
+        ))}
+      </div>
+
+      {/* Selected Technologies */}
+      <div className="flex gap-2 flex-wrap mt-2">
+        {technologies.map((tech) => (
+          <div
+            key={tech}
+            className="bg-gray-200 px-3 py-1 rounded flex items-center gap-2"
+          >
+            <span>{tech}</span>
+
+            <button
+              aria-label="Remove"
+              onClick={() => removeTechnology(tech)}
+              className="text-red-500"
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+      </div>
+
     </div>
   );
 }

@@ -21,126 +21,6 @@ describe('Database Schema and Operations', () => {
     });
   });
 
-  describe('Project Model Schema', () => {
-    it('should create a project with all required fields', async () => {
-      const projectData = {
-        title: "Test DB Project",
-        description: "A test project for database validation",
-        technologies: ["Next.js", "Prisma"]
-      };
-
-      const project = await prisma.project.create({
-        data: projectData
-      });
-
-      expect(project.id).toBeDefined();
-      expect(typeof project.id).toBe('number');
-      expect(project.title).toBe(projectData.title);
-      expect(project.description).toBe(projectData.description);
-      expect(project.technologies).toEqual(projectData.technologies);
-      expect(project.createdAt).toBeInstanceOf(Date);
-      expect(project.updatedAt).toBeInstanceOf(Date);
-    });
-
-    it('should create a project with optional fields', async () => {
-      const projectData = {
-        title: "Test DB Project with Images",
-        description: "A test project with all optional fields",
-        imageUrl: "/test-image.jpg",
-        projectUrl: "https://test-project.com",
-        githubUrl: "https://github.com/test/project",
-        technologies: ["React", "TypeScript"]
-      };
-
-      const project = await prisma.project.create({
-        data: projectData
-      });
-
-      expect(project.imageUrl).toBe(projectData.imageUrl);
-      expect(project.projectUrl).toBe(projectData.projectUrl);
-      expect(project.githubUrl).toBe(projectData.githubUrl);
-    });
-
-    it('should handle null optional fields correctly', async () => {
-      const projectData = {
-        title: "Test DB Project Minimal",
-        description: "A test project with minimal data",
-        technologies: ["JavaScript"]
-      };
-
-      const project = await prisma.project.create({
-        data: projectData
-      });
-
-      expect(project.imageUrl).toBeNull();
-      expect(project.projectUrl).toBeNull();
-      expect(project.githubUrl).toBeNull();
-    });
-
-    it('should auto-generate id as incrementing integer', async () => {
-      const project1 = await prisma.project.create({
-        data: {
-          title: "Test DB Project 1",
-          description: "First test project",
-          technologies: ["HTML"]
-        }
-      });
-
-      const project2 = await prisma.project.create({
-        data: {
-          title: "Test DB Project 2",
-          description: "Second test project",
-          technologies: ["CSS"]
-        }
-      });
-
-      expect(typeof project1.id).toBe('number');
-      expect(typeof project2.id).toBe('number');
-      expect(project2.id).toBeGreaterThan(project1.id);
-    });
-
-    it('should automatically set createdAt and updatedAt timestamps', async () => {
-      const beforeCreate = new Date();
-      
-      const project = await prisma.project.create({
-        data: {
-          title: "Test DB Project Timestamps",
-          description: "Testing timestamp functionality",
-          technologies: ["Node.js"]
-        }
-      });
-
-      const afterCreate = new Date();
-
-      expect(project.createdAt.getTime()).toBeGreaterThanOrEqual(beforeCreate.getTime());
-      expect(project.createdAt.getTime()).toBeLessThanOrEqual(afterCreate.getTime());
-      expect(project.updatedAt.getTime()).toBeGreaterThanOrEqual(project.createdAt.getTime());
-    });
-
-    it('should update updatedAt timestamp on record modification', async () => {
-      const project = await prisma.project.create({
-        data: {
-          title: "Test DB Project Update",
-          description: "Testing update functionality",
-          technologies: ["Vue.js"]
-        }
-      });
-
-      const originalUpdatedAt = project.updatedAt;
-      
-      // Wait a bit to ensure different timestamp
-      await new Promise(resolve => setTimeout(resolve, 10));
-
-      const updatedProject = await prisma.project.update({
-        where: { id: project.id },
-        data: { title: "Test DB Project Updated" }
-      });
-
-      expect(updatedProject.updatedAt.getTime()).toBeGreaterThan(originalUpdatedAt.getTime());
-      expect(updatedProject.createdAt.getTime()).toBe(project.createdAt.getTime());
-    });
-  });
-
   describe('Database Queries', () => {
     beforeEach(async () => {
       // Create test data for query tests
@@ -261,6 +141,128 @@ describe('Database Schema and Operations', () => {
       expect(deletedProject).toBeNull();
     });
   });
+
+  describe('Project Model Schema', () => {
+    it('should create a project with all required fields', async () => {
+      const projectData = {
+        title: "Test DB Project",
+        description: "A test project for database validation",
+        technologies: ["Next.js", "Prisma"]
+      };
+
+      const project = await prisma.project.create({
+        data: projectData
+      });
+
+      expect(project.id).toBeDefined();
+      expect(typeof project.id).toBe('number');
+      expect(project.title).toBe(projectData.title);
+      expect(project.description).toBe(projectData.description);
+      expect(project.technologies).toEqual(projectData.technologies);
+      expect(project.createdAt).toBeInstanceOf(Date);
+      expect(project.updatedAt).toBeInstanceOf(Date);
+    });
+
+    it('should create a project with optional fields', async () => {
+      const projectData = {
+        title: "Test DB Project with Images",
+        description: "A test project with all optional fields",
+        imageUrl: "/test-image.jpg",
+        projectUrl: "https://test-project.com",
+        githubUrl: "https://github.com/test/project",
+        technologies: ["React", "TypeScript"]
+      };
+
+      const project = await prisma.project.create({
+        data: projectData
+      });
+
+      expect(project.imageUrl).toBe(projectData.imageUrl);
+      expect(project.projectUrl).toBe(projectData.projectUrl);
+      expect(project.githubUrl).toBe(projectData.githubUrl);
+    });
+
+    it('should handle null optional fields correctly', async () => {
+      const projectData = {
+        title: "Test DB Project Minimal",
+        description: "A test project with minimal data",
+        technologies: ["JavaScript"]
+      };
+
+      const project = await prisma.project.create({
+        data: projectData
+      });
+
+      expect(project.imageUrl).toBeNull();
+      expect(project.projectUrl).toBeNull();
+      expect(project.githubUrl).toBeNull();
+    });
+
+    it('should auto-generate id as incrementing integer', async () => {
+      const project1 = await prisma.project.create({
+        data: {
+          title: "Test DB Project 1",
+          description: "First test project",
+          technologies: ["HTML"]
+        }
+      });
+
+      const project2 = await prisma.project.create({
+        data: {
+          title: "Test DB Project 2",
+          description: "Second test project",
+          technologies: ["CSS"]
+        }
+      });
+
+      expect(typeof project1.id).toBe('number');
+      expect(typeof project2.id).toBe('number');
+      expect(project2.id).toBeGreaterThan(project1.id);
+    });
+
+    it('should automatically set createdAt and updatedAt timestamps', async () => {
+      const beforeCreate = new Date();
+      
+      const project = await prisma.project.create({
+        data: {
+          title: "Test DB Project Timestamps",
+          description: "Testing timestamp functionality",
+          technologies: ["Node.js"]
+        }
+      });
+
+      const afterCreate = new Date();
+
+      expect(project.createdAt.getTime()).toBeGreaterThanOrEqual(beforeCreate.getTime());
+      expect(project.createdAt.getTime()).toBeLessThanOrEqual(afterCreate.getTime());
+      expect(project.updatedAt.getTime()).toBeGreaterThanOrEqual(project.createdAt.getTime());
+    });
+
+    it('should update updatedAt timestamp on record modification', async () => {
+      const project = await prisma.project.create({
+        data: {
+          title: "Test DB Project Update",
+          description: "Testing update functionality",
+          technologies: ["Vue.js"]
+        }
+      });
+
+      const originalUpdatedAt = project.updatedAt;
+      
+      // Wait a bit to ensure different timestamp
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const updatedProject = await prisma.project.update({
+        where: { id: project.id },
+        data: { title: "Test DB Project Updated" }
+      });
+
+      expect(updatedProject.updatedAt.getTime()).toBeGreaterThan(originalUpdatedAt.getTime());
+      expect(updatedProject.createdAt.getTime()).toBe(project.createdAt.getTime());
+    });
+  });
+
+  
 
   describe('Data Validation', () => {
     it('should enforce required fields (title)', async () => {

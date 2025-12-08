@@ -26,16 +26,15 @@ describe('API Routes - Projects', () => {
 
   afterEach(async () => {
     // Clean up test data after each test
-    await prisma.project.deleteMany({
-      where: {
-        title: { contains: "Test" }
-      }
-    });
+   await prisma.project.deleteMany();  // deletes all rows
   });
+
 
   describe('GET /api/projects', () => {
     it('should return an empty array when no projects exist', async () => {
       const response = await fetch('http://localhost:3000/api/projects');
+      //looks for data being sent out from a specific file and, takes it and storse it in response
+      //route.js is the api file being tested here and is the only file sending data out
       expect(response.status).toBe(200);
       
       const data = await response.json();

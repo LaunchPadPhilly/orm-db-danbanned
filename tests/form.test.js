@@ -83,7 +83,7 @@ describe('ProjectForm Component', () => {
   })
 
   it('calls onSubmit with form data when valid', async () => {
-    const mockTechnologies = ['React', 'JavaScript']
+    const mockTechnologies = ['React']
     
     render(
       <ProjectForm 

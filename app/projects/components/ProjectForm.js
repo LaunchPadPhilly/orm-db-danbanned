@@ -2,18 +2,28 @@
 import { useState } from "react";
 import TechnologyInput from "./TechnologyInput";
 
-export default function ProjectForm({ isOpen, onSubmit, onCancel }) {
+export default function ProjectForm({ isOpen, onSubmit, onCancel } = {}) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [projectUrl, setProjectUrl] = useState("");
-  const [githubUrl, setGithubUrl] = useState("");
+  const [imageUrl, setImageUrl] = useState(null);
+  const [projectUrl, setProjectUrl] = useState(null);
+  const [githubUrl, setGithubUrl] = useState(null);
   const [technologies, setTechnologies] = useState([]);
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
+
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setImageUrl(null);
+    setProjectUrl(null);
+    setGithubUrl(null);
+    setTechnologies([]);
+    setErrors({});
+  };
 
   const validate = () => {
     const err = {};
@@ -24,38 +34,38 @@ export default function ProjectForm({ isOpen, onSubmit, onCancel }) {
       err.technologies = "At least one technology is required";
 
     const isValid = (url) => {
-      try {
-        new URL(url);
-        return true;
-      } catch {
-        return false;
-      }
+      try { new URL(url); return true; } 
+      catch { return false; }
     };
 
     if (imageUrl && !isValid(imageUrl)) err.imageUrl = "Please enter a valid URL";
-    if (projectUrl && !isValid(projectUrl)) err.projectUrl = "Please enter a valid URL";
-    if (githubUrl && !isValid(githubUrl)) err.githubUrl = "Please enter a valid URL";
+
+    if (projectUrl && !isValid(projectUrl)) err.projectUrl = "Invalid URL";
+    if (githubUrl && !isValid(githubUrl)) err.githubUrl = "Invalid URL";
 
     setErrors(err);
     return Object.keys(err).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
+
     e.preventDefault();
+    setLoading(true)
+    
     if (!validate()) return;
 
-    setLoading(true);
-
-    await onSubmit({
+    // Only SEND the collected data up to the parent — no fetch here
+    const formData = {
       title,
       description,
       imageUrl,
       projectUrl,
       githubUrl,
       technologies,
-    });
+    };
 
-    setLoading(false);
+    onSubmit?.(formData); // send the data to the parent
+    resetForm();          // clear form
   };
 
   return (
@@ -102,8 +112,8 @@ export default function ProjectForm({ isOpen, onSubmit, onCancel }) {
           <input
             id="imageUrl"
             aria-label="Image URL"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
+            value={imageUrl || ""}
+            onChange={(e) => setImageUrl(e.target.value || null)}
             className="border p-2 rounded w-full"
           />
           {errors.imageUrl && (
@@ -117,8 +127,8 @@ export default function ProjectForm({ isOpen, onSubmit, onCancel }) {
           <input
             id="projectUrl"
             aria-label="Project URL"
-            value={projectUrl}
-            onChange={(e) => setProjectUrl(e.target.value)}
+            value={projectUrl || ""}
+            onChange={(e) => setProjectUrl(e.target.value || null)}
             className="border p-2 rounded w-full"
           />
           {errors.projectUrl && (
@@ -132,8 +142,8 @@ export default function ProjectForm({ isOpen, onSubmit, onCancel }) {
           <input
             id="githubUrl"
             aria-label="GitHub URL"
-            value={githubUrl}
-            onChange={(e) => setGithubUrl(e.target.value)}
+            value={githubUrl || ""}
+            onChange={(e) => setGithubUrl(e.target.value || null)}
             className="border p-2 rounded w-full"
           />
           {errors.githubUrl && (
@@ -158,6 +168,7 @@ export default function ProjectForm({ isOpen, onSubmit, onCancel }) {
           <button
             type="submit"
             disabled={loading}
+            name="Create Project"
             className="bg-blue-600 text-white px-4 py-2 rounded"
           >
             {loading ? "Creating Project..." : "Create Project"}

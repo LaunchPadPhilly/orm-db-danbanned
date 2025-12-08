@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <div className="min-h-screen font-sans bg-black dark:bg-black transition-colors duration-500">
@@ -41,21 +43,25 @@ export default function Home() {
 
           {/* CTA BUTTONS */}
           <div className="flex gap-6 justify-center">
-            <a
+
+            {/* Projects Link */}
+            <Link
               href="/projects"
               className="px-8 py-4 rounded-2xl bg-purple-600 text-white text-lg 
               shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-300"
             >
               View Projects
-            </a>
+            </Link>
 
-            <a
+            {/* Contact Link */}
+            <Link
               href="/contact"
               className="px-8 py-4 rounded-2xl bg-white/20 backdrop-blur-md text-white text-lg 
               dark:bg-gray-200 dark:text-black shadow-xl hover:scale-105 transition-all duration-300"
             >
               Contact Me
-            </a>
+            </Link>
+
           </div>
 
         </div>

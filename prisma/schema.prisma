@@ -11,12 +11,10 @@ model Project {
   id            Int      @id @default(autoincrement())
   title         String
   description   String
-  imageUrl      String?  @db.VarChar(255)
-  projectUrl    String?  @db.VarChar(255)
-  githubUrl     String?  @db.VarChar(255)
-  technologies  String[]
-  featured      Boolean  @default(false)
-  animation     Boolean  @default(false)
+  imageUrl      String?  
+  projectUrl    String?  
+  githubUrl     String?  
+  technologies  String[]  
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

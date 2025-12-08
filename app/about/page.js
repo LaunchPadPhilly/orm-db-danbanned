@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Page() {
   return (
     <div className="relative min-h-screen w-full px-6 pt-32 pb-24 md:px-16">
@@ -47,7 +49,6 @@ export default function Page() {
       {/* MAIN SECTIONS */}
       <section className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-start mb-24">
 
-
         {/* LEFT SIDE */}
         <div className="space-y-6">
 
@@ -63,7 +64,6 @@ export default function Page() {
               people, improve communities, and make everyday life easier.
             </p>
           </div>
-
 
           {/* WHAT I'M DOING NOW */}
           <div
@@ -82,10 +82,8 @@ export default function Page() {
               <li>🧪 Diving into Next.js</li>
             </ul>
           </div>
+
         </div>
-
-
-
 
         {/* RIGHT SIDE */}
         <div className="space-y-6">
@@ -115,7 +113,6 @@ export default function Page() {
             </div>
           </div>
 
-
           {/* STATUS */}
           <div
             className="p-8 rounded-2xl border border-[#bfa98f] bg-[#f0d9b5]/90 shadow-xl"
@@ -128,11 +125,9 @@ export default function Page() {
               <li>💡 Learning: Next.js & APIs</li>
             </ul>
           </div>
+
         </div>
-
       </section>
-
-
 
 
 
@@ -167,14 +162,14 @@ export default function Page() {
 
       {/* CTA */}
       <div className="text-center">
-        <a
+        <Link
           href="/contact"
           className="px-10 py-4 bg-[#6b4f33] hover:bg-[#5c422b] text-[#fdf6e3]
           rounded-xl text-lg shadow-xl transition-all"
           style={{ fontFamily: "Georgia, serif" }}
         >
           Want to work together? Contact me →
-        </a>
+        </Link>
       </div>
 
     </div>

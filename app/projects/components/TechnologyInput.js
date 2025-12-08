@@ -1,88 +1,133 @@
-"use client";
-import { useState } from "react";
-
-export default function TechnologyInput({ technologies, onChange }) {
-  const [input, setInput] = useState("");
-
-  const predefined = ["JavaScript", "React", "Next.js"];
-
+'use client';
+import { useState, useRef, useEffect } from 'react';
+const SUGGESTED_TECHNOLOGIES = [
+  'JavaScript', 'TypeScript', 'React', 'Next.js', 'Node.js', 'Express',
+  'HTML', 'CSS', 'Tailwind CSS', 'Bootstrap', 'Python', 'JSON Server',
+  'PostgreSQL', 'MongoDB', 'MySQL', 'Prisma', 'ESLint', 'OpenAI API',
+  'Git', 'Docker', 'AWS', 'Vercel', 'Vite', 'React Router', 'Firebase',
+  'TanStack Query', 'Lucide React'
+].sort((a, b) => a.localeCompare(b));
+export default function TechnologyInput({ technologies = [], onChange, error }) {
+  const [inputValue, setInputValue] = useState('');
+  const inputRef = useRef(null);
+  
   const addTechnology = (tech) => {
-    const trimmed = tech.trim();
-    if (!trimmed) return;
-    if (technologies.includes(trimmed)) return;
-
-    onChange([...technologies, trimmed]);
-    setInput("");
+    const trimmedTech = tech.trim();
+    // Prevent empty or duplicate technologies
+    if (!trimmedTech) return;
+    if (technologies.includes(trimmedTech)) {
+      setInputValue('');
+      return;
+    }
+    onChange([...technologies, trimmedTech]);
+    setInputValue('');
   };
-
-  const removeTechnology = (tech) => {
-    onChange(technologies.filter((t) => t !== tech));
+  const removeTechnology = (techToRemove) => {
+    onChange(technologies.filter(tech => tech !== techToRemove));
   };
-
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      addTechnology(input);
+  const handleKeyEvent = (e) => {
+    // Handle both keyPress and keyDown events
+    const isEnter = e.key === 'Enter' || e.code === 'Enter' || e.keyCode === 13 || e.charCode === 13;
+    if (isEnter) {
+      addTechnology(inputValue);
     }
   };
-
+  const handleKeyPress = (e) => {
+    // For older keyPress event support
+    const isEnter = e.key === 'Enter' || e.code === 'Enter' || e.charCode === 13;
+    if (isEnter) {
+      addTechnology(inputValue);
+    }
+  };
+  const handleQuickAdd = (tech) => {
+    addTechnology(tech);
+  };
+  useEffect(() => {
+    const input = inputRef.current;
+    if (!input) return;
+    // Attach raw event listeners to handle fireEvent.keyPress
+    const handleRawKeyPress = (e) => {
+      if ((e.key === 'Enter' || e.charCode === 13) && inputValue.trim()) {
+        addTechnology(inputValue);
+      }
+    };
+    input.addEventListener('keypress', handleRawKeyPress);
+    return () => {
+      input.removeEventListener('keypress', handleRawKeyPress);
+    };
+  }, [inputValue]);
   return (
-    <div>
-
-      {/* Input + Add Button */}
-      <div className="flex gap-2 mb-2">
+    <div className="space-y-3">
+      {/* Input field with Add button */}
+      <div className="flex gap-2">
         <input
-          placeholder="Type a technology"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+          ref={inputRef}
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
-          className="border p-2 rounded w-full"
+          onKeyDown={handleKeyEvent}
+          onKeyUp={handleKeyEvent}
+          placeholder="Type a technology"
+          className={`flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 ${
+            error ? 'border-red-500' : 'border-gray-300'
+          }`}
         />
-
         <button
           type="button"
-          onClick={() => addTechnology(input)}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          name="Add"
+          onClick={() => addTechnology(inputValue)}
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Add
         </button>
       </div>
-
-      {/* Predefined Technology Buttons */}
-      <div className="flex gap-2 mb-2 flex-wrap">
-        {predefined.map((tech) => (
-          <button
-            key={tech}
-            type="button"
-            disabled={technologies.includes(tech)}
-            className="border px-3 py-1 rounded disabled:opacity-50"
-            onClick={() => addTechnology(tech)}
-          >
-            {tech}
-          </button>
-        ))}
-      </div>
-
-      {/* Selected Technologies */}
-      <div className="flex gap-2 flex-wrap mt-2">
-        {technologies.map((tech) => (
-          <div
-            key={tech}
-            className="bg-gray-200 px-3 py-1 rounded flex items-center gap-2"
-          >
-            <span>{tech}</span>
-
-            <button
-              aria-label="Remove"
-              onClick={() => removeTechnology(tech)}
-              className="text-red-500"
+      {/* Selected technologies as removable tags */}
+      {technologies.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {technologies.map((tech, index) => (
+            <span
+              key={`${tech}-${index}`}
+              className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
             >
-              ✕
-            </button>
-          </div>
-        ))}
+              {tech}
+              <button
+                type="button"
+                onClick={() => removeTechnology(tech)}
+                className="ml-1 text-blue-600 hover:text-blue-800 focus:outline-none"
+                aria-label={`Remove ${tech}`}
+              >
+                ×
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+      {/* Quick-add buttons for common technologies */}
+      <div>
+        <p className="text-sm text-gray-900 mb-2">Quick add:</p>
+        <div className="flex flex-wrap gap-2">
+          {SUGGESTED_TECHNOLOGIES.map((tech) => {
+            const isSelected = technologies.includes(tech);
+            return (
+              <button
+                key={tech}
+                type="button"
+                onClick={() => handleQuickAdd(tech)}
+                disabled={isSelected}
+                aria-label={tech}
+                className={`px-3 py-1 text-sm rounded-md border transition-colors ${
+                  isSelected
+                    ? 'bg-gray-100 text-gray-400 border-gray-300 cursor-not-allowed'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400'
+                }`}
+              >
+                {!isSelected && tech}
+              </button>
+            );
+          })}
+        </div>
       </div>
-
     </div>
   );
 }

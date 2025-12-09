@@ -1,161 +1,193 @@
-<<<<<<< HEAD
-export default function Projects() {
-  return (
-    <div className="min-h-screen p-8">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-5xl font-bold mb-12">My Projects</h1>
-        
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
-          {/* Project Card Example - Duplicate this 3 times */}
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div className="h-48 bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center">
-              <p className="text-white font-bold text-xl">Project Image Here</p>
-            </div>
-            <div className="p-6">
-              <h3 className="text-2xl font-bold mb-2">Project Title</h3>
-              <p className="text-gray-600 mb-4">
-                Write a brief description of your project here.
-              </p>
-              <div className="flex gap-2">
-                <span className="text-sm bg-gray-200 px-3 py-1 rounded">Tech 1</span>
-                <span className="text-sm bg-gray-200 px-3 py-1 rounded">Tech 2</span>
-              </div>
-            </div>
-          </div>
+'use client';
 
-          {/* TODO: Add 2 more project cards */}
-          
-        </div>
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
+import ProjectForm from "./components/ProjectForm";
 
-=======
-import Image from 'next/image';
-import Link from 'next/link';
+export default function ProjectsPage() {
+  const router = useRouter();
+  const [formOpen, setFormOpen] = useState(false); // can be false or project object
+  const [projects, setProjects] = useState([]);
 
-export default function Projects() {
-  // TODO: Students will implement the following:
-  // 1. Convert this server component to a client component
-  // 2. Add state management for projects, loading, and form visibility
-  // 3. Implement API fetch functions to get projects from the database
-  // 4. Add project creation functionality using the ProjectForm component
-  // 5. Handle loading and error states
+  useEffect(() => {
+    async function fetchProjects() {
+      const res = await fetch('/api/projects');
+      const data = await res.json();
+      setProjects(Array.isArray(data) ? data : []);
+    }
+    fetchProjects();
+  }, []);
 
-  // For now, show placeholder content
-  const placeholderProjects = [];
+  async function handleDelete(id) {
+    if (!confirm("Are you sure you want to delete this project?")) return;
+
+    try {
+      const res = await fetch(`/api/projects/${id}`, { method: "DELETE" });
+      if (!res.ok) return;
+
+      setProjects(prev => prev.filter(p => p.id !== id));
+
+      // If currently on detail page, redirect
+      if (window.location.pathname === `/projects/${id}`) {
+        router.push('/projects');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   return (
-    <div className="min-h-screen p-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Header - students will add "Add New Project" button here */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
-          <h1 className="text-5xl font-bold">My Projects</h1>
-          {/* TODO: Add "Add New Project" button that shows/hides the form */}
-        </div>
+    <>
+      <h1 className="glitch-title text-5xl md:text-6xl font-extrabold text-white text-center mb-4">
+        Projects
+      </h1>
 
-        {/* TODO: Add ProjectForm component here */}
-        {/* The form should be conditionally rendered based on showForm state */}
-
-        {/* Projects Grid */}
-        {placeholderProjects.length > 0 ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
-            {placeholderProjects.map((project) => (
-              <div key={project.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-                <div className="h-48 bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center">
-                  {project.imageUrl ? (
-                    <Image
-                      src={project.imageUrl}
-                      alt={project.title}
-                      width={400}
-                      height={200}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <p className="text-white font-bold text-xl">No Image</p>
-                  )}
-                </div>
-                <div className="p-6">
-                  <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
-                  <p className="text-gray-600 mb-4 line-clamp-3">{project.description}</p>
-                  <div className="flex gap-2 mb-4 flex-wrap">
-                    {project.technologies?.slice(0, 3).map((tech, index) => (
-                      <span key={index} className="text-sm bg-gray-200 px-3 py-1 rounded">
-                        {tech}
-                      </span>
-                    ))}
-                    {project.technologies?.length > 3 && (
-                      <span className="text-sm text-gray-500 px-3 py-1">
-                        +{project.technologies.length - 3} more
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex gap-2">
-                    <Link 
-                      href={`/projects/${project.id}`}
-                      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
-                    >
-                      View Details
-                    </Link>
-                    {project.projectUrl && (
-                      <a
-                        href={project.projectUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition-colors"
-                      >
-                        Live Demo
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          /* Empty State - Students will enhance this */
-          <div className="text-center py-12">
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">No projects yet</h2>
-              <p className="text-gray-600 mb-6">
-                Get started by setting up your database and implementing the API routes!
-              </p>
-            </div>
-
-            <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 max-w-md mx-auto">
-              <h3 className="font-bold text-blue-900 mb-2">🚀 Getting Started:</h3>
-              <ol className="text-blue-800 space-y-1 list-decimal list-inside text-left">
-                <li>Set up your Neon database</li>
-                <li>Implement the API routes</li>
-                <li>Add project creation functionality</li>
-                <li>Convert this page to use database data</li>
-              </ol>
-            </div>
-          </div>
-        )}
-
-        {/* Project Ideas */}
->>>>>>> solution
-        <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-6">
-          <h3 className="font-bold text-yellow-900 mb-2">💡 Project Ideas:</h3>
-          <ul className="text-yellow-800 space-y-1">
-            <li>• Past school projects</li>
-            <li>• Personal coding projects</li>
-            <li>• Design work or creative projects</li>
-            <li>• Future projects you want to build (coming soon!)</li>
-          </ul>
-        </div>
+      <div className="text-center mt-10">
+        <button
+          className="mt-6 text-white px-4 py-2 border border-white rounded-lg hover:bg-white/10"
+          onClick={() => setFormOpen(true)}
+        >
+           Create Project
+        </button>
       </div>
-    </div>
-<<<<<<< HEAD
-  )
-}
-=======
+
+      {/* Edit/Create Modal */}
+     <ProjectForm
+        isOpen={!!formOpen}
+        project={formOpen && typeof formOpen === "object" ? formOpen : null}
+        onSubmit={async (formData) => {
+          const res = await fetch("/api/projects", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+          });
+
+          const updatedProject = await res.json();
+          console.log("Received updated project:", updatedProject);
+
+          setProjects(prev => [...prev, updatedProject]);
+
+          setFormOpen(false);
+        }}
+      />
+
+      {/* Featured Projects */}
+      <div className="mb-12 space-y-8">
+        {projects.filter(p => p.featured).map((project, idx) => (
+          <motion.article
+            key={project.id}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: idx * 0.12 }}
+            className="grid md:grid-cols-2 gap-8 p-6 rounded-2xl backdrop-blur-sm bg-white/6 border border-white/8 hover:scale-[1.01] transition-transform duration-300 relative overflow-hidden"
+          >
+            {/* Image */}
+            <Link href={`/projects/${project.id}`} className="relative overflow-hidden rounded-xl shadow-lg block">
+              {project.imageUrl ? (
+                <Image
+                  width={500}
+                  height={300}
+                  src={project.imageUrl}
+                  alt={project.title}
+                  className="w-full h-72 object-cover block"
+                />
+              ) : (
+                <div className="w-full h-72 bg-gray-800 flex items-center justify-center text-gray-500">
+                  No Image
+                </div>
+              )}
+              <div className="rgb-overlay pointer-events-none absolute inset-0" aria-hidden />
+            </Link>
+
+            {/* Text & buttons */}
+            <div className="flex flex-col justify-center">
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">{project.title}</h2>
+
+              <p className="text-white/80 mb-4 leading-relaxed line-clamp-3">{project.description}</p>
+
+              <div className="flex flex-wrap gap-2 mb-6">
+                {project.technologies?.slice(0, 3).map((t, i) => (
+                  <span key={i} className="tag-graffiti px-3 py-1 rounded-full text-sm font-semibold">{t}</span>
+                ))}
+              </div>
+
+              <div className="flex gap-2">
+                <Link href={`/projects/${project.id}`} className="btn-ghost">View</Link>
+              </div>
+            </div>
+          </motion.article>
+        ))}
+      </div>
+
+      
+
+      {/* Regular Projects */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {projects.filter(p => !p.featured).map((project, i) => (
+          <motion.div
+            key={project.id}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: i * 0.08 }}
+            className="project-card relative rounded-xl overflow-hidden border border-white/6 bg-white/4 shadow-lg"
+          >
+            <Link href={`/projects/${project.id}`} className="block">
+              <div className="relative overflow-hidden">
+                {project.imageUrl ? (
+                  <Image
+                    src={project.imageUrl}
+                    alt={project.title}
+                    width={300}
+                    height={500}
+                    className="w-full h-48 object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-48 bg-gray-800 flex items-center justify-center text-gray-500">
+                    No Image
+                  </div>
+                )}
+                <div className="rgb-overlay pointer-events-none absolute inset-0" aria-hidden />
+              </div>
+
+              <div className="p-4">
+                <h3 className="text-xl font-semibold text-white mb-2">{project.title}</h3>
+                <p className="text-white/80 text-sm mb-4 line-clamp-2">{project.description}</p>
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {project.technologies?.slice(0, 3).map((t, i) => (
+                    <span key={i} className="tag-graffiti px-3 py-1 rounded-full text-sm font-semibold">{t}</span>
+                  ))}
+                </div>
+
+                <div className="flex gap-2">
+                  <Link href={`/projects/${project.id}`} className="btn-ghost">View</Link>
+                </div>
+              </div>
+            </Link>
+
+            {/* Buttons outside the Link */}
+            <div className="p-4 flex gap-2">
+              <button
+                className="btn-ghost bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded"
+                onClick={() => setFormOpen(project)}
+              >
+                Edit
+              </button>
+
+              <button
+                className="btn-ghost bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+                onClick={() => handleDelete(project.id)}
+              >
+                Delete
+              </button>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </>
   );
 }
-
-// Learning Objectives for Students:
-// 1. Understand server vs client components
-// 2. Learn React state management patterns
-// 3. Implement API integration
-// 4. Handle async operations and error states
-// 5. Build interactive user interfaces
-// 6. Practice component composition
->>>>>>> solution

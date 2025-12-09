@@ -1,0 +1,127 @@
+
+> week2-portfolio-database@2.0.0 dev
+> next dev --turbopack
+
+[32m✔[0m [33mConsole Ninja[0m extension is connected to [33mNext.js[0m, see [36mhttps://tinyurl.com/2vt8jxzw[0m
+⚠ Console Ninja Turbopack support is a PRO feature, [33mcurrently available to community users while in preview[0m
+⚠ Console Ninja Turbopack support is a PRO feature, [33mcurrently available to community users while in preview[0m
+   ▲ Next.js 15.5.6 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://10.0.0.88:3000
+   - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 2.8s
+ ○ Compiling /api/projects ...
+ ✓ Compiled /api/projects in 5.9s
+GET /api/projects HIT
+GET /api/projects HIT
+ GET /api/projects 200 in 2070ms
+ GET /api/projects 200 in 7527ms
+GET /api/projects HIT
+ GET /api/projects 200 in 434ms
+ POST /api/projects 201 in 422ms
+ POST /api/projects 201 in 381ms
+ POST /api/projects 400 in 365ms
+ ○ Compiling /api/projects/[id] ...
+ ✓ Compiled /api/projects/[id] in 668ms
+ ⨯ ./app/api/projects/[id]/route.js:71:7
+Parsing ecmascript source code failed
+[0m [90m 69 |[39m           [33m:[39m undefined[33m,[39m
+ [90m 70 |[39m       }[33m,[39m
+[31m[1m>[22m[39m[90m 71 |[39m     })[33m;[39m
+ [90m    |[39m       [31m[1m^[22m[39m
+ [90m 72 |[39m
+ [90m 73 |[39m     [36mreturn[39m [33mNextResponse[39m[33m.[39mjson(updated[33m,[39m { status[33m:[39m [35m200[39m })[33m;[39m
+ [90m 74 |[39m[0m
+
+Expected ',', got ';'
+
+
+ ○ Compiling /_error ...
+ ⨯ ./app/api/projects/[id]/route.js:71:7
+Parsing ecmascript source code failed
+[0m [90m 69 |[39m           [33m:[39m undefined[33m,[39m
+ [90m 70 |[39m       }[33m,[39m
+[31m[1m>[22m[39m[90m 71 |[39m     })[33m;[39m
+ [90m    |[39m       [31m[1m^[22m[39m
+ [90m 72 |[39m
+ [90m 73 |[39m     [36mreturn[39m [33mNextResponse[39m[33m.[39mjson(updated[33m,[39m { status[33m:[39m [35m200[39m })[33m;[39m
+ [90m 74 |[39m[0m
+
+Expected ',', got ';'
+
+
+ ✓ Compiled /_error in 6.3s
+ GET /api/projects/99999 500 in 2597ms
+ GET /api/projects/386 500 in 7672ms
+ ⨯ ./app/api/projects/[id]/route.js:71:7
+Parsing ecmascript source code failed
+[0m [90m 69 |[39m           [33m:[39m undefined[33m,[39m
+ [90m 70 |[39m       }[33m,[39m
+[31m[1m>[22m[39m[90m 71 |[39m     })[33m;[39m
+ [90m    |[39m       [31m[1m^[22m[39m
+ [90m 72 |[39m
+ [90m 73 |[39m     [36mreturn[39m [33mNextResponse[39m[33m.[39mjson(updated[33m,[39m { status[33m:[39m [35m200[39m })[33m;[39m
+ [90m 74 |[39m[0m
+
+Expected ',', got ';'
+
+
+ GET /api/projects/invalid-id 500 in 385ms
+ ⨯ ./app/api/projects/[id]/route.js:71:7
+Parsing ecmascript source code failed
+[0m [90m 69 |[39m           [33m:[39m undefined[33m,[39m
+ [90m 70 |[39m       }[33m,[39m
+[31m[1m>[22m[39m[90m 71 |[39m     })[33m;[39m
+ [90m    |[39m       [31m[1m^[22m[39m
+ [90m 72 |[39m
+ [90m 73 |[39m     [36mreturn[39m [33mNextResponse[39m[33m.[39mjson(updated[33m,[39m { status[33m:[39m [35m200[39m })[33m;[39m
+ [90m 74 |[39m[0m
+
+Expected ',', got ';'
+
+
+ PUT /api/projects/387 500 in 306ms
+ ⨯ ./app/api/projects/[id]/route.js:71:7
+Parsing ecmascript source code failed
+[0m [90m 69 |[39m           [33m:[39m undefined[33m,[39m
+ [90m 70 |[39m       }[33m,[39m
+[31m[1m>[22m[39m[90m 71 |[39m     })[33m;[39m
+ [90m    |[39m       [31m[1m^[22m[39m
+ [90m 72 |[39m
+ [90m 73 |[39m     [36mreturn[39m [33mNextResponse[39m[33m.[39mjson(updated[33m,[39m { status[33m:[39m [35m200[39m })[33m;[39m
+ [90m 74 |[39m[0m
+
+Expected ',', got ';'
+
+
+ PUT /api/projects/99999 500 in 285ms
+ ⨯ ./app/api/projects/[id]/route.js:71:7
+Parsing ecmascript source code failed
+[0m [90m 69 |[39m           [33m:[39m undefined[33m,[39m
+ [90m 70 |[39m       }[33m,[39m
+[31m[1m>[22m[39m[90m 71 |[39m     })[33m;[39m
+ [90m    |[39m       [31m[1m^[22m[39m
+ [90m 72 |[39m
+ [90m 73 |[39m     [36mreturn[39m [33mNextResponse[39m[33m.[39mjson(updated[33m,[39m { status[33m:[39m [35m200[39m })[33m;[39m
+ [90m 74 |[39m[0m
+
+Expected ',', got ';'
+
+
+ DELETE /api/projects/388 500 in 205ms
+ ⨯ ./app/api/projects/[id]/route.js:71:7
+Parsing ecmascript source code failed
+[0m [90m 69 |[39m           [33m:[39m undefined[33m,[39m
+ [90m 70 |[39m       }[33m,[39m
+[31m[1m>[22m[39m[90m 71 |[39m     })[33m;[39m
+ [90m    |[39m       [31m[1m^[22m[39m
+ [90m 72 |[39m
+ [90m 73 |[39m     [36mreturn[39m [33mNextResponse[39m[33m.[39mjson(updated[33m,[39m { status[33m:[39m [35m200[39m })[33m;[39m
+ [90m 74 |[39m[0m
+
+Expected ',', got ';'
+
+
+ DELETE /api/projects/99999 500 in 293ms
